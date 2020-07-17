@@ -1,55 +1,55 @@
-#Functions for creating and using inverted matrices which caching ability
 
 
-## Creates cacheable matrix for inputting to
-## cacheSolve() function which sets and gets 
-## the cached values
-
-makeCacheMatrix <- function(original.matrix = matrix()) {
+makeCacheMatrix <- function(my_matrix = matrix()) {
+   
+   # Is it a matrix?
+   if (!is.matrix(my_matrix)) {
+      stop("This is not a matrix")
+   }
+   
+   matrix_inversa <- NULL
+   
+   set <- function(y) {
       
-      # Let's check if we have correct input
-      if (!is.matrix(original.matrix)) {
-            stop("Please give a matrix")
-      }
       
-      inverted.matrix <- NULL
+      my_matrix <<- y
       
-      set <- function(y) {
-            original.matrix <<- y
-            inverted.matrix <<- NULL
-      }
+      matrix_inversa <<- NULL
       
-      # Functions for getting and setting cached inv. matrix value
-      get <- function() original.matrix
-      # Inversing the matrix using build in solve() function in R
-      set.inverse <- function(solve) inverted.matrix <<- solve
-      get.inverse <- function() inverted.matrix
       
-      list(
-            set = set, 
-            get = get,
-            set.inverse = set.inverse,
-            get.inverse = get.inverse)
-      
+   }
+   
+   # Ajustar Caché de la MAtrix
+   get <- function() my_matrix
+   # Inversing the matrix using build in solve() function in R
+   set_inversa <- function(solve) matrix_inversa <<- solve
+   get.inversa <- function() matrix_inversa
+   
+   list(
+      set = set, 
+      get = get,
+      set_inversa = set_inversa,
+      get.inversa = get.inversa)
+   
 }
 
 
-## Computes the inverse of the cacheable matrix returned by makeCacheMatrix()
-## If the inverse has already been calculated and there's no change in the matrix
-## then the cacheSolve() returns the cached inverse
+## Cache Solve function. It calculates the inverse of the matrix
+## If the matrix has already been created, and has no changes, then the cached info is pasted
+## If data has changed, then the new value is calculated
 
-cacheSolve <- function(cacheable.matrix, ...) {
-      inverted.matrix <- cacheable.matrix$get.inverse()
-      # Do we have cached matrix available?
-      if(!is.null(inverted.matrix)) {
-            message("Getting cached inverse matrix")
-            return(inverted.matrix)
-      }
-      # Let's create inverted matrix in case
-      # there's no cached matrix available.
-      matrix.to.inverse <- cacheable.matrix$get()
-      inverted.matrix <- solve(matrix.to.inverse)
-      cacheable.matrix$set.inverse(inverted.matrix)
-      inverted.matrix
-      
+cacheSolve <- function(cache_matrix, ...) {
+   matrix_inversa <- cache_matrix$get.inversa()
+   
+   if(!is.null(matrix_inversa)) {
+      message("Getting cache of inversed matrix")
+      return(matrix_inversa)
+   }
+   # Let's create inverted matrix in case
+   # there's no cached matrix available.
+   matrix.to.inverse <- cache_matrix$get()
+   matrix_inversa <- solve(matrix.to.inverse)
+   cache_matrix$set_inversa(matrix_inversa)
+   matrix_inversa
+   
 }
