@@ -1,5 +1,3 @@
-
-
 makeCacheMatrix <- function(my_matrix = matrix()) {
    
    # Is it a matrix?
